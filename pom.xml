@@ -10,7 +10,7 @@
 	</parent>
 
 	<artifactId>flyway-plus</artifactId>
-	<version>5.1.4.0-SNAPSHOT</version>
+	<version>5.1.4.0</version>
 	<packaging>jar</packaging>
 
 	<description>Custom implementation for Flyway</description>
@@ -20,7 +20,7 @@
 	<scm>
 		<url>https://github.com/spt-oss/flyway-plus/tree/master</url>
 		<connection>scm:git:git@github.com:spt-oss/flyway-plus.git</connection>
-		<tag>HEAD</tag>
+		<tag>5.1.4.0</tag>
 	</scm>
 
 	<properties>
