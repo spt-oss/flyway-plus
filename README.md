@@ -9,7 +9,7 @@
 
 ## Products
 
-* `CustomFlyway`
+* `CustomFlyway extends Flyway`
 	* Additional method: *setPlaceholderReplacer(PlaceholderReplacer)*
 * `MysqlH2SqlReplacer implements PlaceholderReplacer`
 	* Replace MySQL-SQL to H2-SQL on migration
@@ -21,20 +21,19 @@
 	```xml
 	<dependency>
 	    <groupId>com.github.spt-oss</groupId>
-	    <artifactId>flyway-plus</artifactId>
-	    <version>5.1.4.0</version>
+	    <artifactId>flyway-core</artifactId>
+	    <version>5.1.4.1</version>
 	</dependency>
 	```
 
-1. Create a subclass of `PlaceholderReplacer` or use 
-[MysqlH2SqlReplacer](./src/main/java/org/flywaydb/core/internal/util/placeholder/MysqlH2SqlReplacer.java).
+1. Create a subclass of `PlaceholderReplacer`. You can also use `MysqlH2SqlReplacer`.
 
 	```java
 	package my.project;
 	
 	import org.flywaydb.core.internal.util.placeholder.PlaceholderReplacer;
 	
-	public class CustomPlaceholderReplacer implements PlaceholderReplacer {
+	public class MyPlaceholderReplacer implements PlaceholderReplacer {
 	    ......
 	}
 	```
@@ -45,7 +44,7 @@
 	import java.sql.DataSource;
 	import org.flywaydb.core.CustomFlyway;
 	import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
-	import my.project.CustomPlaceholderReplacer;
+	import my.project.MyPlaceholderReplacer;
 	
 	DataSource dataSource = DataSourceBuilder.create().url("jdbc:mysql://host:3306/db").build();
 	
@@ -53,31 +52,8 @@
 	flyway.setLocations("classpath:/data");
 	flyway.setSchemas("foo", "bar");
 	flyway.setDataSource(dataSource);
-	flyway.setPlaceholderReplacer(new CustomPlaceholderReplacer());
+	flyway.setPlaceholderReplacer(new MyPlaceholderReplacer());
 	flyway.migrate();
-	```
-
-1. Or create Spring bean if your project is based on Spring Boot.
-
-	```yml
-	spring.flyway:
-	    enabled: true
-	    locations:
-	        - classpath:/data
-	    schemas:
-	        - foo
-	        - bar
-	```
-	```java
-	import org.flywaydb.core.CustomFlyway;
-	import org.springframework.context.annotation.Bean;
-	import org.springframework.boot.autoconfigure.flyway.CustomFlywayMigrationStrategy;
-	import my.project.CustomPlaceholderReplacer;
-	
-	@Bean
-	public CustomFlywayMigrationStrategy migrationStrategy() {
-	    return flyway -> flyway.setPlaceholderReplacer(new CustomPlaceholderReplacer());
-	}
 	```
 
 ## License

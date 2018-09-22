@@ -26,7 +26,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 /**
- * {@link PlaceholderReplacer}: MySQL-H2
+ * SQL replacer for MySQL-H2
  */
 public class MysqlH2SqlReplacer implements PlaceholderReplacer {
 	
@@ -59,7 +59,7 @@ public class MysqlH2SqlReplacer implements PlaceholderReplacer {
 			return sql;
 		}
 		
-		XInternalReplacer replacer = new XInternalReplacer(sql);
+		InternalSqlReplacer replacer = new InternalSqlReplacer(sql);
 		
 		// Remove 'SET ...@...'
 		replacer.remove("(?m)^SET(?:\\s+)(?:.*?)@(?:.*?)$");
@@ -112,10 +112,10 @@ public class MysqlH2SqlReplacer implements PlaceholderReplacer {
 	}
 	
 	/**
-	 * Internal replacer
+	 * Internal SQL replacer
 	 */
 	@RequiredArgsConstructor
-	protected static class XInternalReplacer {
+	protected static class InternalSqlReplacer {
 		
 		/**
 		 * SQL
@@ -127,9 +127,9 @@ public class MysqlH2SqlReplacer implements PlaceholderReplacer {
 		 * Remove pattern in SQL
 		 * 
 		 * @param pattern pattern
-		 * @return {@link XInternalReplacer}
+		 * @return {@link InternalSqlReplacer}
 		 */
-		public XInternalReplacer remove(String pattern) {
+		public InternalSqlReplacer remove(String pattern) {
 			
 			return this.replace(pattern, "");
 		}
@@ -139,9 +139,9 @@ public class MysqlH2SqlReplacer implements PlaceholderReplacer {
 		 * 
 		 * @param pattern pattern
 		 * @param replacement replacement
-		 * @return {@link XInternalReplacer}
+		 * @return {@link InternalSqlReplacer}
 		 */
-		public XInternalReplacer replace(String pattern, String replacement) {
+		public InternalSqlReplacer replace(String pattern, String replacement) {
 			
 			this.sql = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE).matcher(this.sql).replaceAll(replacement);
 			
