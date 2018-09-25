@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.github.spt-oss</groupId>
 		<artifactId>flyway-parent</artifactId>
-		<version>5.1.4.1</version>
+		<version>5.1.4.2-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 
@@ -14,7 +14,7 @@
 	<packaging>jar</packaging>
 
 	<scm>
-		<tag>5.1.4.1</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<dependencies>
