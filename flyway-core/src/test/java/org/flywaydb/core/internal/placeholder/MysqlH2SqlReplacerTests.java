@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.flywaydb.core.internal.util.placeholder;
+package org.flywaydb.core.internal.placeholder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

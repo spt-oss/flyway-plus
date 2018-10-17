@@ -22,7 +22,7 @@
 	<dependency>
 	    <groupId>com.github.spt-oss</groupId>
 	    <artifactId>flyway-core</artifactId>
-	    <version>5.1.4.1</version>
+	    <version>5.2.4.0</version>
 	</dependency>
 	```
 

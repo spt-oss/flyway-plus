@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.flywaydb.core.internal.util.placeholder;
+package org.flywaydb.core.internal.placeholder;
 
 import java.util.Collections;
 import java.util.Map;
@@ -68,11 +68,11 @@ public class MysqlH2SqlReplacer implements PlaceholderReplacer {
 		replacer.remove("(?m)^LOCK(?:\\s+)TABLES(?:\\s+)(?:.*?)$");
 		replacer.remove("(?m)^UNLOCK(?:\\s+)TABLES(?:.*?)$");
 		
-		// Replace 'UNIQUE /* CONSTRAINT */ INDEX' to 'INDEX'
-		replacer.replace("UNIQUE(?:\\s*)/\\*(?:\\s*)CONSTRAINT(?:\\s*)\\*/(?:\\s*)(INDEX|KEY)", INDEX);
+		// Replace 'DROP /* CONSTRAINT */ INDEX' to 'DROP CONSTRAINT'
+		replacer.replace("DROP(?:\\s*)/\\*(?:\\s*)CONSTRAINT(?:\\s*)\\*/(?:\\s*)(INDEX|KEY)", "DROP CONSTRAINT");
 		
-		// Replace 'DROP /* UNIQUE */ INDEX' to 'DROP CONSTRAINT'
-		replacer.replace("DROP(?:\\s*)/\\*(?:\\s*)UNIQUE(?:\\s*)\\*/(?:\\s*)(INDEX|KEY)", "DROP CONSTRAINT");
+		// Replace 'RENAME /* CONSTRAINT */ INDEX' to 'RENAME CONSTRAINT'
+		replacer.replace("RENAME(?:\\s*)/\\*(?:\\s*)CONSTRAINT(?:\\s*)\\*/(?:\\s*)(INDEX|KEY)", "RENAME CONSTRAINT");
 		
 		// Replace 'FULLTEXT' in table
 		replacer.replace("FULLTEXT(?:\\s+)(?:INDEX|KEY)", INDEX);

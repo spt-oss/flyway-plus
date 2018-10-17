@@ -21,12 +21,14 @@ import java.util.Collection;
 
 import org.flywaydb.core.api.resolver.MigrationResolver;
 import org.flywaydb.core.internal.callback.CallbackExecutor;
-import org.flywaydb.core.internal.database.Database;
-import org.flywaydb.core.internal.database.Schema;
+import org.flywaydb.core.internal.database.base.Database;
+import org.flywaydb.core.internal.database.base.Schema;
+import org.flywaydb.core.internal.placeholder.PlaceholderReplacer;
 import org.flywaydb.core.internal.resolver.CompositeMigrationResolver;
 import org.flywaydb.core.internal.resolver.sql.SqlMigrationResolver;
 import org.flywaydb.core.internal.schemahistory.SchemaHistory;
-import org.flywaydb.core.internal.util.placeholder.PlaceholderReplacer;
+import org.flywaydb.core.internal.sqlscript.SqlStatementBuilderFactory;
+import org.flywaydb.core.internal.sqlscript.SqlStatementBuilderFactoryWrapper;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -36,6 +38,7 @@ import lombok.Setter;
 /**
  * Custom {@link Flyway}
  */
+@SuppressWarnings("deprecation")
 public class CustomFlyway extends Flyway {
 	
 	/**
@@ -46,18 +49,18 @@ public class CustomFlyway extends Flyway {
 	private PlaceholderReplacer placeholderReplacer;
 	
 	@Override
-	protected <T> T execute(Command<T> command) {
+	protected <T> T execute(Command<T> command, boolean scannerRequired) {
 		
-		return super.execute(new InternalCommand<>(command, this.placeholderReplacer));
+		return super.execute(new CustomCommand<>(command, this.placeholderReplacer), scannerRequired);
 	}
 	
 	/**
-	 * Internal {@link org.flywaydb.core.Flyway.Command}
+	 * Custom {@link org.flywaydb.core.Flyway.Command}
 	 * 
 	 * @param <T> result type
 	 */
 	@RequiredArgsConstructor
-	protected static class InternalCommand<T> implements Command<T> {
+	protected static class CustomCommand<T> implements Command<T> {
 		
 		/**
 		 * Delegate
@@ -82,23 +85,22 @@ public class CustomFlyway extends Flyway {
 			
 			if (this.placeholderReplacer != null) {
 				
-				this.resetPlaceholderReplacer(migrationResolver, this.placeholderReplacer);
+				this.replacePlaceholderReplacer(migrationResolver, this.placeholderReplacer);
 			}
 			
 			return this.delegate.execute(migrationResolver, schemaHistory, database, schemas, callbackExecutor);
 		}
 		
 		/**
-		 * Reset {@link PlaceholderReplacer}
+		 * Replace {@link PlaceholderReplacer}
 		 * 
-		 * @param migrationResolver {@link MigrationResolver}
+		 * @param resolver {@link MigrationResolver}
 		 * @param placeholderReplacer {@link PlaceholderReplacer}
 		 */
-		protected void resetPlaceholderReplacer(MigrationResolver migrationResolver,
-			PlaceholderReplacer placeholderReplacer) {
+		protected void replacePlaceholderReplacer(MigrationResolver resolver, PlaceholderReplacer placeholderReplacer) {
 			
 			// Extract child resolvers
-			if (migrationResolver instanceof CompositeMigrationResolver) {
+			if (resolver instanceof CompositeMigrationResolver) {
 				
 				try {
 					
@@ -106,34 +108,34 @@ public class CustomFlyway extends Flyway {
 					field.setAccessible(true);
 					
 					@SuppressWarnings("unchecked")
-					Collection<MigrationResolver> childResolvers = (Collection<MigrationResolver>) field
-						.get(migrationResolver);
+					Collection<MigrationResolver> childResolvers = (Collection<MigrationResolver>) field.get(resolver);
 					
 					// Recursive call
 					for (MigrationResolver childResolver : childResolvers) {
 						
-						this.resetPlaceholderReplacer(childResolver, placeholderReplacer);
+						this.replacePlaceholderReplacer(childResolver, placeholderReplacer);
 					}
 				}
 				catch (ReflectiveOperationException e) {
 					
-					throw new IllegalStateException("Failed to get 'MigrationResolver'", e);
+					throw new IllegalStateException("Failed to get value of field 'migrationResolvers'", e);
 				}
 			}
 			
 			// Replace
-			else if (migrationResolver instanceof SqlMigrationResolver) {
+			else if (resolver instanceof SqlMigrationResolver) {
 				
 				try {
 					
-					Field field = SqlMigrationResolver.class.getDeclaredField("placeholderReplacer");
+					Field field = SqlMigrationResolver.class.getDeclaredField("sqlStatementBuilderFactory");
 					field.setAccessible(true);
 					
-					field.set(migrationResolver, placeholderReplacer);
+					field.set(resolver, new SqlStatementBuilderFactoryWrapper(
+						(SqlStatementBuilderFactory) field.get(resolver), placeholderReplacer));
 				}
 				catch (ReflectiveOperationException e) {
 					
-					throw new IllegalStateException("Failed to set 'PlaceholderReplacer'", e);
+					throw new IllegalStateException("Failed to set value of field 'database'", e);
 				}
 			}
 		}
