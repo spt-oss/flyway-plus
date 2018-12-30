@@ -5,7 +5,7 @@
 [![javadoc](https://img.shields.io/badge/javadoc-flyway--plus-blue.svg)](https://www.javadoc.io/doc/com.github.spt-oss/flyway-plus)
 
 * Custom implementation for [Flyway](https://github.com/flyway/flyway)
-* ⚠️**This project is unofficial and experimental.**
+* **Note: This project is unofficial and experimental.**
 
 ## Products
 
