@@ -30,10 +30,10 @@
 
 	<properties>
 		<flyway.version>5.2.4</flyway.version>
-		<h2.version>1.4.197</h2.version>
-		<hikaricp.version>2.7.9</hikaricp.version>
-		<spring-boot.version>2.0.6.RELEASE</spring-boot.version>
-		<spt-checkstyle.version>8.15.0</spt-checkstyle.version>
+		<h2.version>1.4.199</h2.version>
+		<hikaricp.version>3.3.1</hikaricp.version>
+		<spring-boot.version>2.1.5.RELEASE</spring-boot.version>
+		<spt-checkstyle.version>8.21.0-SNAPSHOT</spt-checkstyle.version>
 	</properties>
 
 	<dependencyManagement>
