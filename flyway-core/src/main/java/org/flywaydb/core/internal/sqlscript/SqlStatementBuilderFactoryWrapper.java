@@ -54,5 +54,4 @@ public class SqlStatementBuilderFactoryWrapper implements SqlStatementBuilderFac
 		
 		return this.delegate.createSqlStatementBuilder();
 	}
-	
 }
