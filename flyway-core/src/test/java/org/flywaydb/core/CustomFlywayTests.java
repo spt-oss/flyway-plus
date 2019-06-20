@@ -16,6 +16,7 @@
 
 package org.flywaydb.core;
 
+import org.flywaydb.core.api.configuration.FluentConfiguration;
 import org.flywaydb.core.internal.placeholder.MysqlH2SqlReplacer;
 import org.junit.Test;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -29,16 +30,19 @@ public class CustomFlywayTests {
 	 * {@link CustomFlyway#migrate()}
 	 */
 	@Test
-	@SuppressWarnings("deprecation")
 	public void migrate() {
 		
-		CustomFlyway flyway = new CustomFlyway();
-		flyway.setLocations("classpath:/flyway/migration");
-		flyway.setSchemas("example");
-		flyway.setSqlMigrationPrefix("");
-		flyway.setSqlMigrationSeparator("-");
-		flyway.setDataSource(DataSourceBuilder.create().url("jdbc:h2:mem:test;MODE=MySQL").build());
-		flyway.setPlaceholderReplacer(new MysqlH2SqlReplacer());
+		FluentConfiguration config = Flyway.configure()
+		/* @formatter:off */
+			.locations("classpath:/flyway/migration")
+			.schemas("example")
+			.sqlMigrationPrefix("")
+			.sqlMigrationSeparator("-")
+			.dataSource(DataSourceBuilder.create().url("jdbc:h2:mem:test;MODE=MySQL;DATABASE_TO_UPPER=FALSE").build());
+			/* @formatter:on */
+		
+		Flyway flyway = new CustomFlyway(config, new MysqlH2SqlReplacer());
+		flyway.clean();
 		flyway.migrate();
 	}
 }

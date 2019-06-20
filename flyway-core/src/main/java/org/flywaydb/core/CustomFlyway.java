@@ -19,6 +19,7 @@ package org.flywaydb.core;
 import java.lang.reflect.Field;
 import java.util.Collection;
 
+import org.flywaydb.core.api.configuration.Configuration;
 import org.flywaydb.core.api.resolver.MigrationResolver;
 import org.flywaydb.core.internal.callback.CallbackExecutor;
 import org.flywaydb.core.internal.database.base.Database;
@@ -30,23 +31,31 @@ import org.flywaydb.core.internal.schemahistory.SchemaHistory;
 import org.flywaydb.core.internal.sqlscript.SqlStatementBuilderFactory;
 import org.flywaydb.core.internal.sqlscript.SqlStatementBuilderFactoryWrapper;
 
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 /**
  * Custom {@link Flyway}
  */
-@SuppressWarnings("deprecation")
 public class CustomFlyway extends Flyway {
 	
 	/**
 	 * {@link PlaceholderReplacer}
 	 */
-	@Getter
-	@Setter
-	private PlaceholderReplacer placeholderReplacer;
+	private final PlaceholderReplacer placeholderReplacer;
+	
+	/**
+	 * Constructor
+	 * 
+	 * @param configuration {@link Configuration}
+	 * @param placeholderReplacer {@link PlaceholderReplacer}
+	 */
+	public CustomFlyway(Configuration configuration, PlaceholderReplacer placeholderReplacer) {
+		
+		super(configuration);
+		
+		this.placeholderReplacer = placeholderReplacer;
+	}
 	
 	@Override
 	protected <T> T execute(Command<T> command, boolean scannerRequired) {
