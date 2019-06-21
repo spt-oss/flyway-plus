@@ -24,7 +24,7 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 /**
  * {@link Test}: {@link MysqlH2SqlReplacer}
  */
-public class CustomFlywayTests {
+public class CustomFlywayTest {
 	
 	/**
 	 * {@link CustomFlyway#migrate()}

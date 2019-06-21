@@ -30,7 +30,7 @@ import org.springframework.core.io.ClassPathResource;
 /**
  * {@link Test}: {@link MysqlH2SqlReplacer}
  */
-public class MysqlH2SqlReplacerTests {
+public class MysqlH2SqlReplacerTest {
 	
 	/**
 	 * Data path
